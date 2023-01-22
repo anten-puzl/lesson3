@@ -2,13 +2,13 @@ import pygame
 from pygame.constants import QUIT, K_DOWN, K_UP, K_LEFT, K_RIGHT
 from copy import copy
 from random import randint
+from os import listdir
 
 
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255
 RED = 255, 0, 0
 GREEN = 0, 255, 0
-
 
 
 pygame.init()
@@ -20,9 +20,14 @@ screen = width, heigth = 800, 600
 
 main_surface = pygame.display.set_mode(screen)
 
-player = pygame.image.load('img\player.png').convert_alpha()
+IMG_PATH = 'img/goose'
+
+player_imgs = [pygame.image.load(IMG_PATH + '/'+ file).convert_alpha() for  file in listdir(IMG_PATH)]
+img_counter = 0
+player =player_imgs[img_counter]
 player_rect = player.get_rect()
 speed = 7
+
 
 def create_enemy():
     enemy = pygame.image.load('img\enemy.png').convert_alpha()
@@ -51,6 +56,10 @@ pygame.time.set_timer(CREATE_ENEMY, 1500)
 CREATE_BONUS = pygame.USEREVENT + 2
 pygame.time.set_timer(CREATE_BONUS, 1600)
 
+CHANGE_IMG = pygame.USEREVENT + 3
+pygame.time.set_timer(CHANGE_IMG, 125)
+
+
 
 enemies = []
 bonuses = []
@@ -67,6 +76,12 @@ while is_working:
             enemies.append(create_enemy())
         if event.type == CREATE_BONUS:
             bonuses.append(create_bonus())
+        if event.type == CHANGE_IMG:
+            player = player_imgs[img_counter]
+            img_counter += 1
+            if img_counter > len(player_imgs)-1:
+                img_counter = 0
+
     pressed_key = pygame.key.get_pressed()
 
     bgX -= bg_speed
