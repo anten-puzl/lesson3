@@ -33,11 +33,17 @@ def create_enemy():
 
 def create_bonus():
     bonus = pygame.image.load('img/bonus.png').convert_alpha()
-    bonus_rect = pygame.Rect(randint(0, width), bonus.get_size()[0],*bonus.get_size())
+    bonus_width = bonus.get_size()[0]
+    bonus_height = bonus.get_size()[1]
+    bonus_rect = pygame.Rect(randint(0+bonus_width, width-bonus_width), 0,*bonus.get_size())
     bonus_speed = randint(2,5)
     return [bonus, bonus_rect, bonus_speed]
 
+
 bg = pygame.transform.scale(pygame.image.load('img/background.png').convert(), screen)
+bgX = 0
+bgX2 = bg.get_width()
+bg_speed = 3
 
 CREATE_ENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(CREATE_ENEMY, 1500)
@@ -61,9 +67,19 @@ while is_working:
             enemies.append(create_enemy())
         if event.type == CREATE_BONUS:
             bonuses.append(create_bonus())
-    main_surface.blit(bg, ( 0, 0))
-    main_surface.blit(font.render(str(scores), True, WHITE), (width - 30, 0))
     pressed_key = pygame.key.get_pressed()
+
+    bgX -= bg_speed
+    bgX2 -= bg_speed
+
+    if bgX < - bg.get_width():
+        bgX = bg.get_width()
+    if bgX2 < - bg.get_width():
+        bgX2 = bg.get_width()
+
+    main_surface.blit(bg, (bgX,0))
+    main_surface.blit(bg, (bgX2, 0))
+    main_surface.blit(font.render(str(scores), True, BLACK), (width - 30, 0))
     if pressed_key[K_DOWN]:
         if player_rect.bottom <= heigth:
             player_rect = player_rect.move((0, speed))
