@@ -60,7 +60,6 @@ CHANGE_IMG = pygame.USEREVENT + 3
 pygame.time.set_timer(CHANGE_IMG, 125)
 
 
-
 enemies = []
 bonuses = []
 scores = 0
